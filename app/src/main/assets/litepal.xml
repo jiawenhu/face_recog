@@ -1,0 +1,11 @@
+<litepal>
+
+    <dbname value="face_recog" />
+
+    <version value="1" />
+
+    <list>
+        <mapping class="com.android.opencvdemo3.db.Person" />
+    </list>
+
+</litepal>
