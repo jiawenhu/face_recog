@@ -25,11 +25,23 @@
         android:layout_height="wrap_content"
         android:text="Choose from Album"/>
 
-    <ImageView
-        android:id="@+id/catch_picture"
+    <Button
+        android:id="@+id/layouttest1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"/>
+        android:text="Register Succeed"/>
+
+   <Button
+       android:id="@+id/layouttest2"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text="Recognize Succeed"/>
+
+    <Button
+        android:id="@+id/layouttest3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Recognize Failed"/>
 
 </LinearLayout>
 

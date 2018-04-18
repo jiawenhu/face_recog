@@ -26,9 +26,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="com.android.opencvdemo3.activity.HelloActivity">
+            <intent-filter>
+                <action android:name="com.android.opencvdemo3.activity.HelloActivity.ACTION_START" />
 
-        <activity android:name="com.android.opencvdemo3.activity.HelloActivity"/>
-
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="com.android.opencvdemo3.activity.HelloActivity.FOR_TAKEN_PHOTO" />
+                <category android:name="com.android.opencvdemo3.activity.HelloActivity.FOR_CHOSEN_PHOTO" />
+            </intent-filter>
+        </activity>
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -40,6 +46,9 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
+        <activity android:name="com.android.opencvdemo3.result.RegisterSuccess" />
+        <activity android:name="com.android.opencvdemo3.result.RecognizeSuccess" />
+        <activity android:name="com.android.opencvdemo3.result.RecognizeFail"></activity>
     </application>
 
 </manifest>
