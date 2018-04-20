@@ -48,7 +48,12 @@
 
         <activity android:name="com.android.opencvdemo3.result.RegisterSuccess" />
         <activity android:name="com.android.opencvdemo3.result.RecognizeSuccess" />
-        <activity android:name="com.android.opencvdemo3.result.RecognizeFail"></activity>
+        <activity android:name="com.android.opencvdemo3.result.RecognizeFail" />
+
+        <activity android:name="com.android.opencvdemo3.activity.DetectActivity">
+        </activity>
+
+
     </application>
 
 </manifest>

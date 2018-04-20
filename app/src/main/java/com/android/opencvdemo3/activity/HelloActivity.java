@@ -6,16 +6,23 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.test.opencvdemo3.R;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 
 public class HelloActivity extends BaseActivity {
 
     private ImageView picture;
+
+    private Button registerBtn, recognizeBtn;
+
+    private byte[] bytes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +30,10 @@ public class HelloActivity extends BaseActivity {
         setContentView(R.layout.hello_layout);
 
         picture = (ImageView) findViewById(R.id.get_picture);
+
+        // 功能操作按钮
+        registerBtn = (Button) findViewById(R.id.register);
+        recognizeBtn = (Button) findViewById(R.id.recognize);
 
         Intent intent = getIntent();
         if (intent != null) {
@@ -36,6 +47,8 @@ public class HelloActivity extends BaseActivity {
                     Bitmap bitmap = BitmapFactory.decodeStream(
                             getContentResolver().openInputStream(imageUri)); // 把Uri对象以位图形式解析出来
                     picture.setImageBitmap(bitmap); //显示跳转后的图片
+                    bytes = bitmap2Bytes(bitmap); // 转bitmap为byte数组，以便Intent传递
+
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -53,7 +66,9 @@ public class HelloActivity extends BaseActivity {
                 * 将照片解析为Bitmap形式展现
                 */
                     Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
-                    picture.setImageBitmap(bitmap);
+                    picture.setImageBitmap(bitmap); // 显示图片
+                    bytes = bitmap2Bytes(bitmap); // 转bitmap为byte数组，以便Intent传递
+
                 } else {
                     Toast.makeText(this, "相册选图失败", Toast.LENGTH_SHORT).show();
                 }
@@ -62,5 +77,35 @@ public class HelloActivity extends BaseActivity {
         } else {
             Toast.makeText(this, "Intent传路径失败", Toast.LENGTH_SHORT).show();
         }
+
+        // 人脸检测并，登记人脸信息
+        registerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HelloActivity.this, DetectActivity.class);
+                intent.putExtra("wait_picture", bytes); // 带着待处理图片进入人脸检测活动
+                startActivity(intent);
+            }
+        });
+
+
+        // 比对人脸库，进行人脸识别
+        recognizeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /**
+                 * 【人脸识别】API接入
+                 */
+            }
+        });
     }
+
+
+    // bitmap转byte数组
+    private byte[] bitmap2Bytes(Bitmap bm){
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        return baos.toByteArray();
+    }
+
 }
