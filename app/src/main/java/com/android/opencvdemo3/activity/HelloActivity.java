@@ -42,9 +42,11 @@ public class HelloActivity extends BaseActivity {
              */
             if (intent.hasCategory("com.android.opencvdemo3.activity.HelloActivity.FOR_TAKEN_PHOTO")) {
                 bytes = intent.getByteArrayExtra("imageBytes");
+                String imagePath = intent.getStringExtra("pathfromcamera");
                 // 转byte数组为bitmap，显示
                 Bitmap bitmap= BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 picture.setImageBitmap(bitmap);
+                imagePth = imagePath;
             }
 
             /**

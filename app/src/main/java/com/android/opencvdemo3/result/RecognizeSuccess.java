@@ -2,14 +2,14 @@ package com.android.opencvdemo3.result;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+import com.android.opencvdemo3.activity.BaseActivity;
 import com.android.opencvdemo3.activity.BeginActivity;
 import com.test.opencvdemo3.R;
 
-public class RecognizeSuccess extends AppCompatActivity {
+public class RecognizeSuccess extends BaseActivity {
 
     private Button backToBegin;
 

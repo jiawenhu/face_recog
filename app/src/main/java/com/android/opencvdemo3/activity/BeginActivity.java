@@ -185,6 +185,8 @@ public class BeginActivity extends BaseActivity {
     private void handleTakenImage() {
         Bitmap bitmap = getBitmap(imageUri);
         byte[] bytes = bitmap2Bytes(bitmap);
+        String pathfromcamera = imageUri.getPath();
+        Log.d("BeginActivity", pathfromcamera);
 
         /**
          * 隐式传递到HelloActivity
@@ -194,9 +196,10 @@ public class BeginActivity extends BaseActivity {
         intent.addCategory("com.android.opencvdemo3.activity.HelloActivity.FOR_TAKEN_PHOTO");
         /**
          * intent的附加信息
-         * 是之前取出来的路径，将在HelloActivity里再次取出
+         * 把Bitmap转成了bytes数组
          */
         intent.putExtra("imageBytes", bytes);
+        intent.putExtra("pathfromcamera", pathfromcamera);
         /**
          * 启动跳转程序
          */
@@ -211,12 +214,13 @@ public class BeginActivity extends BaseActivity {
         * 获取路径
         */
         Uri uri = data.getData();
-        /**
-        *Document类型Uri对document id处理
-        */
+
         if (DocumentsContract.isDocumentUri(this, uri)) {
+            /**
+             *Document类型Uri对document id处理
+             */
             String docId = DocumentsContract.getDocumentId(uri);
-            /*
+            /**
             * 与Uri中Authority部分比较,media格式需进一步解析
             * */
             if ("com.android.providers.media.documents".equals(
@@ -240,9 +244,14 @@ public class BeginActivity extends BaseActivity {
             }
         } else if ("content".equalsIgnoreCase(uri.getScheme())) {
             /**
-            * 普通处理
+            * content类型的Uri，则使用普通方式处理
             */
             imagePath = getImagePath(uri, null);
+        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            /**
+             * file类型的Uri，直接获取图片路径即可
+             */
+            imagePath = uri.getPath();
         }
         /**
         * 图片显示
