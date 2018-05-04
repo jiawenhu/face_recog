@@ -18,6 +18,12 @@ public class RegisterSuccess extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register_success);
 
+        /*// 测试路径是否出现
+        Intent intent = getIntent();
+        String test = intent.getStringExtra("show_path");
+        Log.d("RegisterSuccess", test);*/
+
+
         backToBegin = (Button) findViewById(R.id.back_to_begin);
         backToBegin.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,6 +12,8 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
+import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -21,8 +24,10 @@ import com.android.opencvdemo3.result.RecognizeSuccess;
 import com.android.opencvdemo3.result.RegisterSuccess;
 import com.test.opencvdemo3.R;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
+import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * 进入app的第一个活动
@@ -37,6 +42,7 @@ public class BeginActivity extends BaseActivity {
     private TextView welcome;
 
     private Uri imageUri;
+    private String path;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +61,7 @@ public class BeginActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 /**
-                * 创建File对象，实现拍照图片的存储
+                * 查看SD卡
                 */
                 String sdStatus = Environment.getExternalStorageState();
                 if (!sdStatus.equals(Environment.MEDIA_MOUNTED)) { // 检测sd是否可用
@@ -64,25 +70,20 @@ public class BeginActivity extends BaseActivity {
                 /**
                  * 创建一个目录用于存放拍的照片
                  */
-                String path = System.currentTimeMillis() + ".jpg";
+                path = Environment.getExternalStorageDirectory() + "/DCIM/Camera/IMG_" + DateFormat.format("yyyyMMdd_hhmmss",
+                        Calendar.getInstance(Locale.CHINA))   + ".jpg";
+                Log.d("BeginActivity", "目录创建成功。");
                 /**
                  * 创建File对象，用于存储拍照后的图片
                  */
-                File outputImage = new File(getExternalCacheDir(), path);
-                try {
-                    if (outputImage.exists()) {
-                        outputImage.delete();
-                    }
-                    outputImage.createNewFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                File outputImage = new File(path);
+                Log.d("BeginActivity", "File创建成功。");
+
                 /**
                 * 将File对象转成Uri对象
                 */
                 if (Build.VERSION.SDK_INT >= 24) {
-                    imageUri = FileProvider.getUriForFile(BeginActivity.this,
-                            "com.android.opencvdemo3.activity.fileprovider", outputImage);
+                    imageUri = FileProvider.getUriForFile(BeginActivity.this, "com.android.opencvdemo3.activity.fileprovider", outputImage);
                 } else {
                     imageUri = Uri.fromFile(outputImage);
                 }
@@ -145,7 +146,6 @@ public class BeginActivity extends BaseActivity {
             }
         });
 
-
     }
 
     @Override
@@ -183,25 +183,26 @@ public class BeginActivity extends BaseActivity {
      * 对拍照后照片的操作
      */
     private void handleTakenImage() {
+        Bitmap bitmap = getBitmap(imageUri);
+        byte[] bytes = bitmap2Bytes(bitmap);
+
         /**
          * 隐式传递到HelloActivity
          * 加一个category用以区分
          */
         Intent intent = new Intent("com.android.opencvdemo3.activity.HelloActivity.ACTION_START");
         intent.addCategory("com.android.opencvdemo3.activity.HelloActivity.FOR_TAKEN_PHOTO");
-
         /**
-         * intent的一些附加信息
-         * 第三个是Parcelable形式的Uri文件，在HelloActivity里取出
+         * intent的附加信息
+         * 是之前取出来的路径，将在HelloActivity里再次取出
          */
-        intent.setDataAndType(imageUri, "image/*");
-        intent.putExtra("scale", true);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        intent.putExtra("imageBytes", bytes);
         /**
          * 启动跳转程序
          */
         startActivity(intent);
     }
+
 
     @TargetApi(19)
     private void handleImageOnKitKat(Intent data) {
@@ -298,5 +299,25 @@ public class BeginActivity extends BaseActivity {
          */
         startActivity(intent);
     }
+
+    // Uri获取bitmap
+    private Bitmap getBitmap(Uri uri) {
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+            return bitmap;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    // bitmap转byte数组
+    private byte[] bitmap2Bytes(Bitmap bm){
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        return baos.toByteArray();
+    }
+
+
 
 }

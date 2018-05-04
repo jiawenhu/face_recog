@@ -9,7 +9,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.android.opencvdemo3.result.RegisterSuccess;
 import com.test.opencvdemo3.R;
+
 
 /**
  * 用于检测人脸的活动
@@ -17,9 +19,13 @@ import com.test.opencvdemo3.R;
  */
 public class DetectActivity extends BaseActivity {
 
+    // 调用本地库函数“人脸检测”
+    public native void faceDetect(Object bitmap);
+
     private ImageView waitPicture;
     private Button originBtn, detectedBtn, comfirmBtn;
     private byte[] bytes;
+    private String imagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +42,7 @@ public class DetectActivity extends BaseActivity {
         Intent intent = getIntent();
         if (intent != null) {
             bytes = intent.getByteArrayExtra("wait_picture");
+            imagePath = intent.getStringExtra("imagePath");
         } else {
             Toast.makeText(this, "Intent传图失败", Toast.LENGTH_SHORT).show();
         }
@@ -60,6 +67,11 @@ public class DetectActivity extends BaseActivity {
                  * 最后把图片传回来
                  * 再通过ImageView显示
                  */
+                // 转byte数组为bitmap，进行检测。再把检测结果呈现出来
+                Bitmap bitmap= BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                faceDetect(bitmap);
+                waitPicture.setImageBitmap(bitmap);
+
             }
         });
 
@@ -71,8 +83,11 @@ public class DetectActivity extends BaseActivity {
                  * 点击“确认登记”就会请求【人脸注册】API接口功能
                  * 之后再补全
                  */
+                Intent intent = new Intent(DetectActivity.this, RegisterSuccess.class);
+                intent.putExtra("show_path", imagePath); // 检查路径是否传递过来
+                startActivity(intent);
+
             }
         });
     }
-
 }

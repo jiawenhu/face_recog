@@ -3,9 +3,7 @@ package com.android.opencvdemo3.activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -14,7 +12,6 @@ import android.widget.Toast;
 import com.test.opencvdemo3.R;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 
 public class HelloActivity extends BaseActivity {
 
@@ -23,6 +20,8 @@ public class HelloActivity extends BaseActivity {
     private Button registerBtn, recognizeBtn;
 
     private byte[] bytes;
+
+    private String imagePth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,20 +37,14 @@ public class HelloActivity extends BaseActivity {
         Intent intent = getIntent();
         if (intent != null) {
             /**
-             * 如果是通过拍照传来的带有Uri的intent
-             * 则解析imageUri显示图片
+             * 如果是通过拍照传来的带有byte数组的intent
+             * 则转byte数组为bitmap显示图片
              */
             if (intent.hasCategory("com.android.opencvdemo3.activity.HelloActivity.FOR_TAKEN_PHOTO")) {
-                try {
-                    Uri imageUri = intent.getParcelableExtra(MediaStore.EXTRA_OUTPUT);
-                    Bitmap bitmap = BitmapFactory.decodeStream(
-                            getContentResolver().openInputStream(imageUri)); // 把Uri对象以位图形式解析出来
-                    picture.setImageBitmap(bitmap); //显示跳转后的图片
-                    bytes = bitmap2Bytes(bitmap); // 转bitmap为byte数组，以便Intent传递
-
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
+                bytes = intent.getByteArrayExtra("imageBytes");
+                // 转byte数组为bitmap，显示
+                Bitmap bitmap= BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                picture.setImageBitmap(bitmap);
             }
 
             /**
@@ -68,6 +61,7 @@ public class HelloActivity extends BaseActivity {
                     Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
                     picture.setImageBitmap(bitmap); // 显示图片
                     bytes = bitmap2Bytes(bitmap); // 转bitmap为byte数组，以便Intent传递
+                    imagePth = imagePath;
 
                 } else {
                     Toast.makeText(this, "相册选图失败", Toast.LENGTH_SHORT).show();
@@ -84,6 +78,7 @@ public class HelloActivity extends BaseActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(HelloActivity.this, DetectActivity.class);
                 intent.putExtra("wait_picture", bytes); // 带着待处理图片进入人脸检测活动
+                intent.putExtra("imagePath", imagePth); // 把图片路径继续传送
                 startActivity(intent);
             }
         });
