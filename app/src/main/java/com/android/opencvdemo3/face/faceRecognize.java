@@ -26,7 +26,7 @@ public class faceRecognize {
             String imgStr2 = Base64Util.encode(imgData2);
             String imgParam2 = URLEncoder.encode(imgStr2, "UTF-8");
 
-            String param = "group_id=" + "test_group_2" + "&user_top_num=" + "1" + "&face_top_num=" + "1" + "&images=" + imgParam + "," + imgParam2;
+            String param = "group_id=" + "face_recog_test1" + "&user_top_num=" + "1" + "&face_top_num=" + "1" + "&images=" + imgParam + "," + imgParam2;
 
             // 注意这里仅为了简化编码每一次请求都去获取access_token，线上环境access_token有过期时间， 客户端可自行缓存，过期后重新获取。
             String accessToken = "24.91848a788d48f447d15147aec770a628.2592000.1527929510.282335-11121511";

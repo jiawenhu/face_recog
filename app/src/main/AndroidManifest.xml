@@ -46,14 +46,19 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name="com.android.opencvdemo3.result.RegisterSuccess" />
+        <activity android:name="com.android.opencvdemo3.result.RegisterSuccess">
+            <intent-filter>
+                <action android:name="com.android.opencvdemo3.result.RegisterSuccess.ACTION_START" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="com.android.opencvdemo3.result.RegisterSuccess.FROM_BEGIN" />
+                <category android:name="com.android.opencvdemo3.result.RegisterSuccess.FROM_REGISTER" />
+            </intent-filter>
+        </activity>
         <activity android:name="com.android.opencvdemo3.result.RecognizeSuccess" />
         <activity android:name="com.android.opencvdemo3.result.RecognizeFail" />
-
-        <activity android:name="com.android.opencvdemo3.activity.DetectActivity">
-        </activity>
-
-
+        <activity android:name="com.android.opencvdemo3.activity.DetectActivity"></activity>
+        <activity android:name="com.android.opencvdemo3.activity.RegisterActivity"></activity>
     </application>
 
 </manifest>

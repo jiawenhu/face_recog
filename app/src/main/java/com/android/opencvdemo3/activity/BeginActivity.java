@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import com.android.opencvdemo3.result.RecognizeFail;
 import com.android.opencvdemo3.result.RecognizeSuccess;
-import com.android.opencvdemo3.result.RegisterSuccess;
 import com.test.opencvdemo3.R;
 
 import java.io.ByteArrayOutputStream;
@@ -125,7 +124,8 @@ public class BeginActivity extends BaseActivity {
         layout1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(BeginActivity.this, RegisterSuccess.class);
+                Intent intent = new Intent("com.android.opencvdemo3.result.RegisterSuccess.ACTION_START");
+                intent.addCategory("com.android.opencvdemo3.result.RegisterSuccess.FROM_BEGIN");
                 startActivity(intent);
             }
         });

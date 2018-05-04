@@ -1,4 +1,4 @@
-package com.android.opencvdemo3.service;
+package com.android.opencvdemo3.util;
 
 import org.json.JSONObject;
 
@@ -14,10 +14,6 @@ import java.util.Map;
  */
 
 public class AuthService {
-    public static void main(String[] args) {
-        getAuth() ;
-
-    }
     /**
      * 获取权限token
      * @return 返回示例：
@@ -74,7 +70,7 @@ public class AuthService {
             /**
              * 返回结果示例
              */
-            System.err.println("result:" + result);
+            System.out.println("result:" + result);
             JSONObject jsonObject = new JSONObject(result);
             String access_token = jsonObject.getString("access_token");
             return access_token;
@@ -83,8 +79,13 @@ public class AuthService {
             e.printStackTrace(System.err);
         }
 
-        // 获得Token为:24.91848a788d48f447d15147aec770a628.2592000.1527929510.282335-11121511
+        // 获得Token为:
+        // 24.0afcd23f0198e23e9b09aacde20d6eee.2592000.1528029961.282335-11121511
 
         return null;
+    }
+
+    public static void main(String[] args) {
+        getAuth();
     }
 }

@@ -9,7 +9,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.android.opencvdemo3.result.RegisterSuccess;
 import com.test.opencvdemo3.R;
 
 
@@ -30,7 +29,7 @@ public class DetectActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detect);
+        setContentView(R.layout.detect_layout);
 
         waitPicture = (ImageView) findViewById(R.id.wait_detect);
 
@@ -83,7 +82,7 @@ public class DetectActivity extends BaseActivity {
                  * 点击“确认登记”就会请求【人脸注册】API接口功能
                  * 之后再补全
                  */
-                Intent intent = new Intent(DetectActivity.this, RegisterSuccess.class);
+                Intent intent = new Intent(DetectActivity.this, RegisterActivity.class);
                 intent.putExtra("show_path", imagePath); // 检查路径是否传递过来
                 startActivity(intent);
 

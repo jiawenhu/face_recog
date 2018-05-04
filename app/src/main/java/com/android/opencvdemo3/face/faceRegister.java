@@ -11,37 +11,49 @@ import java.net.URLEncoder;
  */
 
 public class faceRegister {
-
-    public static String add() {
+    // 注册新人脸的函数
+    public static String register(String facePath, String faceId, String userInfo) {
         // 请求url
         String url = "https://aip.baidubce.com/rest/2.0/face/v2/faceset/user/add";
+
         try {
-            // 本地文件路径
-            String filePath = "D:\\Work\\OpencvDemo3\\app\\src\\main\\res\\drawable\\face.jpg";
-            byte[] imgData = FileUtil.readFileByBytes(filePath);
+            // 文件路径
+            byte[] imgData = FileUtil.readFileByBytes(facePath);
             String imgStr = Base64Util.encode(imgData);
             String imgParam = URLEncoder.encode(imgStr, "UTF-8");
 
-            String filePath2 = "D:\\Work\\OpencvDemo3\\app\\src\\main\\res\\drawable\\face2.jpg";
-            byte[] imgData2 = FileUtil.readFileByBytes(filePath2);
-            String imgStr2 = Base64Util.encode(imgData2);
-            String imgParam2 = URLEncoder.encode(imgStr2, "UTF-8");
-
-            String param = "uid=" + "test_user_5" + "&user_info=" + "userInfo5" + "&group_id=" + "test_group_2" + "&images=" + imgParam + "," + imgParam2;
-
-            // 注意这里仅为了简化编码每一次请求都去获取access_token，线上环境access_token有过期时间， 客户端可自行缓存，过期后重新获取。
-            String accessToken = "24.91848a788d48f447d15147aec770a628.2592000.1527929510.282335-11121511";
-
+            String param = "uid=" + faceId + "&user_info=" + userInfo + "&group_id=" + "face_recog_group" + "&images=" + imgParam;
+            String accessToken = "24.0afcd23f0198e23e9b09aacde20d6eee.2592000.1528029961.282335-11121511";
             String result = HttpUtil.post(url, accessToken, param);
             System.out.println(result);
             return result;
+
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
+    /*public static void main(String[] args) {
+        faceRegister.register("D:\\Work\\OpencvDemo3\\app\\src\\main\\res\\drawable\\face3.jpg", "1", "test");
+        // String log_id = parseJSON(result);
+        // String logId = Long.toString(log_id);
+        // System.out.println(log_id);
+    }*/
 
-    public static void main(String[] args) {
-        faceRegister.add();
-    }
+    /*private static String parseJSON(String result) {
+        String re = null;
+        try {
+            JSONObject jo = new JSONObject(result);
+            re = jo.getString("log_id");
+            // String err = jo.getString("error_code");
+            System.out.println("注册码为：" + re);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return re;
+    }*/
 }
+
+
+
